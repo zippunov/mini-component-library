@@ -27,38 +27,40 @@ const ProgressBar = ({ value, size }) => {
   const height = heights[size.toLowerCase()] || '8px';
   const padding = paddings[size.toLowerCase()] || '0';
   const radius = radiuses[size.toLowerCase()] || '4px';
-  const endRadius = value === 100 ? '4px' : '0';
   value = value || 0;
   if (value > 100) {
     value = 100;
   }
-  const innerWidth = `${value}%`
   return <OuterBar
-            style={{'--height': height, '--padding': padding, '--radius': radius, '--end-radius': endRadius, '--inner-width': innerWidth}}
+            style={{'--height': height, '--padding': padding, '--radius': radius, '--inner-width': `${value}%`}}
             role="progressbar" aria-valuenow={value} aria-valuemin="0" aria-valuemax="100"
           >
-      <InnerBar>
-        <VisuallyHidden>{value + '%'}</VisuallyHidden>
-      </InnerBar>
+      <InnerBarWrapper>
+        <InnerBar>
+          <VisuallyHidden>{value}%</VisuallyHidden>
+        </InnerBar>
+      </InnerBarWrapper>
     </OuterBar>;
 };
 
 const OuterBar = styled.div`
   background-color: ${COLORS.transparentGray15};
   box-shadow: inset 0px 2px 4px ${COLORS.transparentGray35};
-  width: 100%;
   height: var(--height);
   padding: var(--padding);
   border-radius: var(--radius);
 `;
 
+const InnerBarWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+`;
+
 const InnerBar = styled.div`
   height: 100%;
   background-color: ${COLORS.primary};
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-top-right-radius: var(--end-radius);
-  border-bottom-right-radius: var(--end-radius);
   width: var(--inner-width);
 `;
 
